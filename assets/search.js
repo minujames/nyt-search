@@ -14,21 +14,26 @@ $( "#submit" ).on("click", function( event ) {
 
   console.log(q, beginDate, endDate);
 
-  if(q === undefined || q === '' || beginDate === undefined || 
-      beginDate === '' || endDate === undefined || endDate === ''){
+  if(q === undefined || q === ''){
 
     console.log("Please enter all the inputs");
     $("#main-panel").html("Please enter all the inputs");
     return;
   }
 
-  beginDate = beginDate + "0101";     //"20130101";
-  endDate =  endDate +"1231";      //"20150101";
-
   // https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=c9beeb2ff1f54bad81f07c49240a4146&q=trump&begin_date=20130101&end_date=20150101&  
 
-  var searchUrl = baseUrl + "api-key=" + apikey + "&q=" + q + 
-    "&begin_date=" + beginDate + "&end_date=" + endDate;
+  var searchUrl = baseUrl + "api-key=" + apikey + "&q=" + q;
+
+  if(beginDate !== "" && beginDate !== undefined){
+    beginDate = beginDate + "0101";
+    searchUrl += "&begin_date=" + beginDate;
+  }
+  if(endDate !== "" && endDate != undefined){
+    endDate =  endDate +"1231"; 
+    searchUrl += "&end_date=" + endDate;
+  }
+
 
   console.log("search Url", searchUrl);
 
@@ -54,6 +59,9 @@ function displayResult(response){
 
   for(var i=0; i < limit ; i++){
     var index = i + 1;
+
+    // hasOwnProperty()
+
     var headline = records[i].headline.main;
     var author = records[i].byline.original;
     var section = records[i].section_name;
