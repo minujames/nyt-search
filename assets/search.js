@@ -2,14 +2,29 @@ $(document).ready(function(){
 
 
 $( "#submit" ).on("click", function( event ) {
-  alert( "Handler for sumit called." );
+  // alert( "Handler for sumit called." );
   event.preventDefault();
 
   var baseUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
   var apikey = "c9beeb2ff1f54bad81f07c49240a4146";
-  var q = "trump";
-  var beginDate = "20130101";
-  var endDate = "20150101";
+  
+  var q =  $("#search-term").val().trim();     
+  var beginDate = $("#start-year").val().trim();     //"20130101";
+  var endDate =  $("#end-year").val().trim();      //"20150101";
+
+  console.log(q, beginDate, endDate);
+
+  if(q === undefined || q === '' || beginDate === undefined || 
+      beginDate === '' || endDate === undefined || endDate === ''){
+
+    console.log("Please enter all the inputs");
+    $("#main-panel").html("Please enter all the inputs");
+    return;
+  }
+
+  beginDate = beginDate + "0101";     //"20130101";
+  endDate =  endDate +"1231";      //"20150101";
+
   // https://api.nytimes.com/svc/search/v2/articlesearch.json?api-key=c9beeb2ff1f54bad81f07c49240a4146&q=trump&begin_date=20130101&end_date=20150101&  
 
   var searchUrl = baseUrl + "api-key=" + apikey + "&q=" + q + 
@@ -31,11 +46,11 @@ $( "#submit" ).on("click", function( event ) {
 function displayResult(response){
   var result = response.response;
 
-  // filter according to input limit
-  var limit = 3;
-
-
   var records = result.docs;
+  
+  var limit = $("#num-records").val().trim();
+
+  $("#main-panel").empty();
 
   for(var i=0; i < limit ; i++){
     var index = i + 1;
